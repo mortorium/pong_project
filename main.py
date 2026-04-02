@@ -27,7 +27,7 @@ while running:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("purple")
+    screen.fill("black")
 
     # Ball setup
     ball = pygame.draw.circle(screen, "white", ball_pos, 40)
