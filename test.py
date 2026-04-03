@@ -2,7 +2,7 @@ import pygame
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((1280, 640))
 clock = pygame.time.Clock()
 running = True
 dt = 0
@@ -65,6 +65,10 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
 
+    hud_middle_rect = pygame.draw.rect(screen, "white", (screen.get_width() / 2, 0, 20, screen.get_height()-5))
+    hud_upper_rect = pygame.draw.rect(screen, "white", (0, 0, screen.get_width(), 5))
+    hud_lower_rect = pygame.draw.rect(screen, "white", (0, screen.get_height()-5, screen.get_width(), 5))
+
     # Ball setup
     ball = pygame.draw.circle(screen, "white", ball_pos, 40)
 
@@ -100,8 +104,8 @@ while running:
             player1_y_pos = 10
     if keys[pygame.K_s]:
         player1_y_pos += 300 * dt
-        if player1_y_pos >= 630.00:
-            player1_y_pos = 630
+        if player1_y_pos >= 555.00:
+            player1_y_pos = 555
 
     test_player.update_player_pos(keys, dt)
 
