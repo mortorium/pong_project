@@ -26,10 +26,8 @@ class Player:
         self.width = width
         self.height = height
 
-        #player1 = pygame.draw.rect(screen, "red", (player1_x_pos, player1_y_pos, 60,80))
-
     def draw_player(self, screen):
-        return pygame.draw.rect(screen, self.color, (self.x_pos, self.y_pos, self.width, self.height))
+        player = pygame.draw.rect(screen, self.color, (self.x_pos, self.y_pos, self.width, self.height))
 
     def update_player_pos(self, key_pressed, dt):
 
@@ -43,8 +41,14 @@ class Player:
             if self.y_pos >= 630.00:
                 self.y_pos = 630
 
-    def collide_detection(self):
-        pass
+    def collide_detection(self, x_coord, y_coord, screen, show_collision=False):
+        collission = pygame.draw.rect(screen, self.color, (self.x_pos, self.y_pos, self.width, self.height))
+
+        if collission.collidepoint(x_coord, y_coord):
+            if show_collision:
+                collision = pygame.draw.rect(screen, "white", (self.x_pos, self.y_pos, self.width, self.height))
+
+            return True
 
 
 
@@ -85,6 +89,7 @@ while running:
 
     test_player.draw_player(screen)
 
+
     #Player 1 setup
     player1 = pygame.draw.rect(screen, "red", (player1_x_pos, player1_y_pos, 60,80))
 
@@ -113,6 +118,10 @@ while running:
     if player1.collidepoint(ball_pos.x, ball_pos.y):
         ##ball_pos.x += 300 * dt
         invert_ball_x_pos = False
+
+    if test_player.collide_detection(ball_pos.x, ball_pos.y, screen):
+        invert_ball_x_pos = False
+
 
     #cpu collision setup
     if cpu.collidepoint(ball_pos.x - 50, ball_pos.y - 50):
