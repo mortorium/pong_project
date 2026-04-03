@@ -1,0 +1,131 @@
+import pygame
+
+# pygame setup
+pygame.init()
+screen = pygame.display.set_mode((1280, 720))
+clock = pygame.time.Clock()
+running = True
+dt = 0
+
+player1_x_pos = 40
+player1_y_pos = screen.get_height() / 2
+ball_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+ball_speed = 300
+cpu_x_pos = 1180
+cpu_y_pos = screen.get_height() / 2
+
+# These is a switch that help me to invert the axis of the ball
+invert_ball_x_pos = False
+invert_ball_y_pos = False
+
+class Player:
+    def __init__(self, color, x_pos, y_pos, width, height):
+        self.color = color
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+        self.width = width
+        self.height = height
+
+        #player1 = pygame.draw.rect(screen, "red", (player1_x_pos, player1_y_pos, 60,80))
+
+    def draw_player(self, screen):
+        return pygame.draw.rect(screen, self.color, (self.x_pos, self.y_pos, self.width, self.height))
+
+    def update_player_pos(self, key_pressed, dt):
+
+        if key_pressed[pygame.K_w]:
+            self.y_pos -= 300 * dt
+            if self.y_pos <= 10.00:
+                self.y_pos = 10
+
+        if key_pressed[pygame.K_s]:
+            self.y_pos += 300 * dt
+            if self.y_pos >= 630.00:
+                self.y_pos = 630
+
+    def collide_detection(self):
+        pass
+
+
+
+test_player = Player("blue", screen.get_height() / 2, screen.get_height() / 2, 60, 80)
+
+while running:
+    ball_speed += 0.1
+    # poll for events
+    # pygame.QUIT event means the user clicked X to close your window
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # fill the screen with a color to wipe away anything from last frame
+    screen.fill("black")
+
+    # Ball setup
+    ball = pygame.draw.circle(screen, "white", ball_pos, 40)
+
+    if not invert_ball_x_pos:
+        ball_pos.x += ball_speed * dt
+        if ball_pos.x >= 1200:
+            invert_ball_x_pos = True
+    else:
+        ball_pos.x -= ball_speed * dt
+        if ball_pos.x <= 10:
+            invert_ball_x_pos = False
+
+    if not invert_ball_y_pos:
+        ball_pos.y += ball_speed * dt
+        if ball_pos.y >= 630:
+            invert_ball_y_pos = True
+    else:
+        ball_pos.y -= ball_speed * dt
+        if ball_pos.y <= 0:
+            invert_ball_y_pos = False
+
+
+    test_player.draw_player(screen)
+
+    #Player 1 setup
+    player1 = pygame.draw.rect(screen, "red", (player1_x_pos, player1_y_pos, 60,80))
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+        player1_y_pos -= 300 * dt
+        if player1_y_pos <= 10.00:
+            player1_y_pos = 10
+    if keys[pygame.K_s]:
+        player1_y_pos += 300 * dt
+        if player1_y_pos >= 630.00:
+            player1_y_pos = 630
+
+    test_player.update_player_pos(keys, dt)
+
+    #cpu setup
+    cpu = pygame.draw.rect(screen, "green", (cpu_x_pos, cpu_y_pos, 60,80))
+
+    if ball_pos.y >= cpu_y_pos:
+        cpu_y_pos += 300 * dt
+    else:
+        cpu_y_pos -= 300 * dt
+
+    #print to view if the player rect collides with the ball
+    #print(player1.collidepoint(ball_pos.x, ball_pos.y))
+    if player1.collidepoint(ball_pos.x, ball_pos.y):
+        ##ball_pos.x += 300 * dt
+        invert_ball_x_pos = False
+
+    #cpu collision setup
+    if cpu.collidepoint(ball_pos.x - 50, ball_pos.y - 50):
+        invert_ball_x_pos = True
+
+
+    # flip() the display to put your work on screen
+    pygame.display.flip()
+
+    # limits FPS to 60
+    # dt is delta time in seconds since last frame, used for framerate-
+    # independent physics.
+    dt = clock.tick(60) / 1000
+
+pygame.quit()
+#Nothing to see here
