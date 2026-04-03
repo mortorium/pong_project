@@ -1,4 +1,5 @@
 import pygame
+from player import Player
 
 # pygame setup
 pygame.init()
@@ -7,8 +8,8 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-player1_x_pos = 40
-player1_y_pos = screen.get_height() / 2
+#player1_x_pos = 40
+#player1_y_pos = screen.get_height() / 2
 ball_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 ball_speed = 300
 cpu_x_pos = 1180
@@ -17,6 +18,9 @@ cpu_y_pos = screen.get_height() / 2
 # These is a switch that help me to invert the axis of the ball
 invert_ball_x_pos = False
 invert_ball_y_pos = False
+
+#Create Player instance
+player1 = Player("red", 40, screen.get_height() / 2, 60, 80)
 
 while running:
     ball_speed += 0.1
@@ -51,17 +55,20 @@ while running:
             invert_ball_y_pos = False
 
     #Player 1 setup
-    player1 = pygame.draw.rect(screen, "red", (player1_x_pos, player1_y_pos, 60,80))
+#    player1 = pygame.draw.rect(screen, "red", (player1_x_pos, player1_y_pos, 60,80))
+    player1.draw_player(screen)
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player1_y_pos -= 300 * dt
-        if player1_y_pos <= 10.00:
-            player1_y_pos = 10
-    if keys[pygame.K_s]:
-        player1_y_pos += 300 * dt
-        if player1_y_pos >= 630.00:
-            player1_y_pos = 630
+#    if keys[pygame.K_w]:
+#        player1_y_pos -= 300 * dt
+#        if player1_y_pos <= 10.00:
+#            player1_y_pos = 10
+#    if keys[pygame.K_s]:
+#        player1_y_pos += 300 * dt
+#        if player1_y_pos >= 630.00:
+#            player1_y_pos = 630
+
+    player1.update_player_pos(keys, dt)
 
     #cpu setup
     cpu = pygame.draw.rect(screen, "green", (cpu_x_pos, cpu_y_pos, 60,80))
@@ -73,8 +80,11 @@ while running:
 
     #print to view if the player rect collides with the ball
     #print(player1.collidepoint(ball_pos.x, ball_pos.y))
-    if player1.collidepoint(ball_pos.x, ball_pos.y):
+#    if player1.collidepoint(ball_pos.x, ball_pos.y):
         ##ball_pos.x += 300 * dt
+#        invert_ball_x_pos = False
+
+    if player1.collide_detection(ball_pos.x, ball_pos.y, screen):
         invert_ball_x_pos = False
 
     #cpu collision setup
